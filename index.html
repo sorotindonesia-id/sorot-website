@@ -1,0 +1,636 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Listing photo editing for villas, apartments and boutique hotels. Clean, bright, true-to-life photos in 24 hours. Get 3 photos edited free.">
+<meta name="theme-color" content="#0B0D0C">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Sorot Studio · Same room. Better light.">
+<meta property="og:description" content="Listing photo editing for short-term rentals and boutique hotels. 3 photos edited free.">
+<meta property="og:image" content="img/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<style>html{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Sorot Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=Manrope:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a darkened room and one beam of light. The cursor is the lamp: wherever it points, the edited photo shows through. Single dark look by design. */
+:root{
+  color-scheme:dark;
+  --night:#0B0D0C;        /* the unlit room */
+  --dusk:#121513;         /* raised surfaces */
+  --wall:#1A1E1B;         /* cards */
+  --line:#262B28;
+  --paper:#EEEAE2;        /* lit text */
+  --dim:#9A9F99;          /* secondary text */
+  --faint:#646A65;
+  --beam:#E2A653;         /* warm lamp light */
+  --beam-deep:#B97F35;
+  --display:"Bodoni Moda","Didot","Bodoni 72",Georgia,serif;
+  --sans:"Manrope",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--night);color:var(--dim);font-family:var(--sans);font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.wrap{max-width:1240px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+h1,h2,h3{color:var(--paper);font-family:var(--display);font-weight:400;line-height:1.06;text-wrap:balance;margin:0;letter-spacing:-.01em}
+h1{font-size:clamp(2.8rem,7vw,6rem)}
+h2{font-size:clamp(2rem,4.4vw,3.4rem)}
+h3{font-size:1.35rem}
+em{font-style:italic;color:var(--beam)}
+p{margin:0;max-width:60ch}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--beam);outline-offset:3px}
+.eyebrow{font-family:var(--mono);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);display:flex;align-items:center;gap:12px}
+.eyebrow::before{content:"";width:24px;height:1px;background:var(--beam)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;height:50px;padding:0 26px;border-radius:999px;font-family:var(--sans);font-weight:600;font-size:.92rem;text-decoration:none;border:1px solid color-mix(in srgb,var(--paper) 30%,transparent);color:var(--paper);background:transparent;cursor:pointer;transition:background .25s,color .25s,border-color .25s,box-shadow .25s}
+.btn:hover{border-color:var(--beam);color:var(--beam)}
+.btn.lit{background:var(--beam);border-color:var(--beam);color:#17120A}
+.btn.lit:hover{background:#F0BD72;color:#17120A;box-shadow:0 0 40px -6px color-mix(in srgb,var(--beam) 70%,transparent)}
+.btn svg{width:16px;height:16px}
+
+/* ambient lamp that trails the cursor */
+#halo{position:fixed;left:0;top:0;width:520px;height:520px;margin:-260px 0 0 -260px;border-radius:50%;pointer-events:none;z-index:0;
+  background:radial-gradient(circle,color-mix(in srgb,var(--beam) 9%,transparent) 0%,transparent 62%);opacity:0;transition:opacity .6s;will-change:transform}
+body.has-pointer #halo{opacity:1}
+main,header,footer{position:relative;z-index:1}
+
+/* header */
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--night)}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:color-mix(in srgb,var(--night) 78%,transparent);backdrop-filter:blur(12px) saturate(1.2);border-bottom:1px solid color-mix(in srgb,var(--line) 70%,transparent)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:20px;height:68px}
+.logo{display:flex;align-items:baseline;gap:9px;text-decoration:none;color:var(--paper)}
+.logo b{font-family:var(--display);font-weight:500;font-size:1.55rem;letter-spacing:.02em}
+.logo i{width:7px;height:7px;border-radius:50%;background:var(--beam);box-shadow:0 0 12px 2px color-mix(in srgb,var(--beam) 60%,transparent);display:inline-block;transform:translateY(-3px)}
+.logo span{font-family:var(--mono);font-size:.64rem;letter-spacing:.22em;text-transform:uppercase;color:var(--dim)}
+.nav{display:flex;gap:28px}
+.nav a{text-decoration:none;font-size:.88rem;font-weight:500;color:var(--dim);transition:color .2s}
+.nav a:hover{color:var(--paper)}
+.top .btn{height:40px;padding:0 18px;font-size:.84rem}
+
+/* hero: the lamp */
+.hero{padding-top:clamp(20px,3vw,32px)}
+.lamp{position:relative;aspect-ratio:16/8.2;max-width:100%;border-radius:6px;overflow:hidden;background:#000;cursor:none;touch-action:pan-y;user-select:none}
+.lamp img,.lamp video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.lamp .dark{filter:brightness(.34) saturate(.5) contrast(.95)}
+.lamp .lit{--r:clamp(170px,24vw,340px);filter:brightness(1.06);
+  -webkit-mask-image:radial-gradient(circle var(--r) at var(--x,62%) var(--y,46%),#000 0,#000 62%,transparent 100%);
+          mask-image:radial-gradient(circle var(--r) at var(--x,62%) var(--y,46%),#000 0,#000 62%,transparent 100%)}
+.lamp .ring{position:absolute;left:var(--x,62%);top:var(--y,46%);width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;background:var(--beam);box-shadow:0 0 0 6px color-mix(in srgb,var(--beam) 25%,transparent),0 0 30px 6px color-mix(in srgb,var(--beam) 50%,transparent);pointer-events:none;opacity:.9}
+.lamp .shade{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(11,13,12,0) 55%,rgba(11,13,12,.78) 100%)}
+.lamp .copy{position:absolute;left:0;right:0;bottom:0;padding:clamp(20px,4vw,48px);display:grid;grid-template-columns:1.3fr 1fr;gap:24px;align-items:end;pointer-events:none}
+.lamp .copy > *{min-width:0}
+.lamp .copy .eyebrow{color:var(--paper);opacity:.8;margin-bottom:16px}
+.lamp .copy .right{display:flex;flex-direction:column;gap:20px;pointer-events:auto}
+.lamp .copy p{color:color-mix(in srgb,var(--paper) 82%,transparent)}
+.lamp .copy .row{display:flex;gap:12px;flex-wrap:wrap}
+.lamp .hint{position:absolute;top:18px;right:18px;font-family:var(--mono);font-size:.64rem;letter-spacing:.16em;text-transform:uppercase;color:var(--paper);background:rgba(11,13,12,.55);backdrop-filter:blur(6px);padding:7px 11px;border-radius:2px;pointer-events:none}
+.below-hero{display:none}
+
+.stats{display:grid;grid-template-columns:repeat(4,1fr);margin-top:28px;border-top:1px solid var(--line)}
+.stats div{padding:20px 0 0;display:flex;flex-direction:column;gap:4px}
+.stats div + div{padding-left:22px;border-left:1px solid var(--line)}
+.stats b{font-family:var(--display);font-weight:400;color:var(--paper);font-size:clamp(1.6rem,3vw,2.3rem);font-variant-numeric:lining-nums tabular-nums}
+.stats span{font-size:.8rem;color:var(--faint)}
+
+section.block{padding-block:clamp(72px,11vw,136px)}
+.sec-head{display:grid;grid-template-columns:1fr 1fr;gap:24px 56px;align-items:end;margin-bottom:clamp(32px,5vw,52px)}
+.sec-head > *{min-width:0}
+.sec-head h2{margin-top:18px}
+.hair{height:1px;background:linear-gradient(90deg,var(--beam),transparent);transform-origin:left;margin-top:22px;max-width:220px}
+
+/* film */
+.film{position:relative;aspect-ratio:16/9;max-width:100%;border-radius:6px;overflow:hidden;background:var(--dusk);border:1px solid var(--line)}
+.film video{width:100%;height:100%;object-fit:cover;display:block}
+.film figcaption{position:absolute;left:16px;bottom:14px;font-family:var(--mono);font-size:.64rem;letter-spacing:.16em;text-transform:uppercase;color:var(--paper);background:rgba(11,13,12,.55);padding:6px 10px;border-radius:2px}
+
+/* work viewer */
+.tabs{display:flex;gap:2px;flex-wrap:wrap;border-bottom:1px solid var(--line);margin-bottom:28px}
+.tabs button{font:inherit;font-size:.9rem;font-weight:500;color:var(--faint);background:none;border:0;padding:12px 14px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .2s}
+.tabs button:hover{color:var(--paper)}
+.tabs button[aria-selected="true"]{color:var(--paper);border-bottom-color:var(--beam)}
+.viewer{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:clamp(24px,4vw,52px);align-items:start}
+.ba{position:relative;aspect-ratio:3/2;max-width:100%;overflow:hidden;border-radius:4px;background:var(--dusk);user-select:none;touch-action:pan-y}
+.ba img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.ba .after{clip-path:inset(0 0 0 var(--pos,50%));transition:clip-path .08s linear}
+.ba .line{position:absolute;top:0;bottom:0;left:var(--pos,50%);width:1px;background:var(--beam);box-shadow:0 0 18px 2px color-mix(in srgb,var(--beam) 60%,transparent);pointer-events:none}
+.ba .knob{position:absolute;top:50%;left:var(--pos,50%);width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;background:var(--beam);color:#17120A;display:grid;place-items:center;pointer-events:none;box-shadow:0 0 0 6px color-mix(in srgb,var(--beam) 18%,transparent)}
+.ba .knob svg{width:20px;height:20px}
+.ba input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:ew-resize;margin:0;z-index:2}
+.ba input:focus-visible ~ .knob{outline:3px solid var(--paper);outline-offset:3px}
+.ba .tag{position:absolute;bottom:14px;font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--paper);background:rgba(11,13,12,.6);backdrop-filter:blur(6px);padding:6px 10px;border-radius:2px;pointer-events:none}
+.ba .tag.b{left:14px}.ba .tag.a{right:14px}
+.info{display:flex;flex-direction:column;gap:18px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 96px)}
+.info .loc{font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--beam)}
+.info h3{font-size:2.1rem}
+.spec{margin:0;border-top:1px solid var(--line)}
+.spec div{display:grid;grid-template-columns:92px 1fr;gap:12px;padding:12px 0;border-bottom:1px solid var(--line);font-size:.9rem}
+.spec dt{font-family:var(--mono);font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);padding-top:4px}
+.spec dd{margin:0;color:var(--paper)}
+.thumbs{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:14px}
+.thumbs button{all:unset;cursor:pointer;display:flex;flex-direction:column;gap:8px}
+.thumbs img{width:100%;aspect-ratio:3/2;object-fit:cover;border-radius:2px;display:block;filter:brightness(.5) saturate(.6);transition:filter .3s}
+.thumbs button:hover img{filter:brightness(.85)}
+.thumbs button[aria-pressed="true"] img{filter:none;outline:1px solid var(--beam);outline-offset:3px}
+.thumbs span{font-size:.8rem;color:var(--faint)}
+.thumbs button[aria-pressed="true"] span{color:var(--paper);font-weight:600}
+.thumbs button:focus-visible img{outline:2px solid var(--beam);outline-offset:3px}
+.disclaimer{margin-top:36px;padding:18px 20px;border-left:1px solid var(--beam);background:var(--dusk);font-size:.9rem;max-width:none}
+.disclaimer b{color:var(--paper)}
+
+/* index: lights on when you point at a room */
+.index{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.index button{all:unset;cursor:pointer;display:flex;flex-direction:column;gap:8px;min-width:0}
+.index .pic{position:relative;aspect-ratio:3/2;overflow:hidden;border-radius:3px;background:var(--dusk)}
+.index .pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .45s,filter .45s,transform .9s cubic-bezier(.2,.7,.2,1)}
+.index .pic img.b{filter:brightness(.55) saturate(.65)}
+.index .pic img.a{opacity:0}
+.index button:hover img.a,.index button:focus-visible img.a{opacity:1}
+.index button:hover img,.index button:focus-visible img{transform:scale(1.03)}
+.index .t{font-size:.84rem;color:var(--paper);font-weight:500}
+.index .s{font-size:.75rem;color:var(--faint);margin-top:-6px}
+.index button:focus-visible .pic{outline:2px solid var(--beam);outline-offset:3px}
+
+/* process */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);list-style:none;margin:0;padding:0;counter-reset:s;border-top:1px solid var(--line)}
+.steps li{counter-increment:s;padding:26px 26px 0 0;display:flex;flex-direction:column;gap:10px;min-width:0}
+.steps li + li{padding-left:26px;border-left:1px solid var(--line)}
+.steps li::before{content:counter(s,decimal-leading-zero);font-family:var(--display);font-size:2.8rem;line-height:1;color:var(--beam)}
+.steps p{font-size:.93rem}
+
+/* standards */
+.std{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.std > div{background:var(--night);padding:clamp(24px,4vw,44px);display:flex;flex-direction:column;gap:18px;min-width:0}
+.std > div.yes{background:linear-gradient(160deg,color-mix(in srgb,var(--beam) 7%,var(--night)),var(--night) 60%)}
+.std ul{list-style:none;margin:0;padding:0}
+.std li{display:grid;grid-template-columns:22px 1fr;gap:10px;padding:12px 0;border-bottom:1px solid var(--line);color:var(--paper);font-size:.95rem}
+.std li:last-child{border-bottom:0}
+.std svg{width:16px;height:16px;margin-top:4px}
+.std .yes svg{color:var(--beam)}
+.std .no svg{color:var(--faint)}
+.std .no li{color:var(--dim)}
+
+/* pricing */
+.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.plan{border:1px solid var(--line);border-radius:6px;padding:34px 28px;display:flex;flex-direction:column;gap:18px;background:var(--dusk);min-width:0;position:relative;transition:border-color .3s}
+.plan:hover{border-color:color-mix(in srgb,var(--beam) 45%,var(--line))}
+.plan.feat{border-color:var(--beam);background:linear-gradient(180deg,color-mix(in srgb,var(--beam) 10%,var(--dusk)),var(--dusk) 55%)}
+.plan.feat::before{content:"Most chosen";position:absolute;top:-11px;left:28px;background:var(--beam);color:#17120A;font-family:var(--mono);font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;padding:4px 10px;border-radius:2px}
+.plan h3{font-family:var(--sans);font-size:1rem;font-weight:700}
+.amt{display:flex;align-items:baseline;gap:8px}
+.amt b{font-family:var(--display);font-weight:400;font-size:3.2rem;line-height:1;color:var(--paper);font-variant-numeric:lining-nums}
+.amt span{font-size:.85rem;color:var(--faint)}
+.was{font-size:.82rem;color:var(--faint);margin-top:-10px}
+.plan ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px;font-size:.92rem;flex:1}
+.plan li{display:grid;grid-template-columns:18px 1fr;gap:8px;color:var(--paper)}
+.plan li svg{width:14px;height:14px;margin-top:5px;color:var(--beam)}
+.plan .btn{width:100%}
+.addons{margin-top:24px;font-size:.88rem;color:var(--faint);max-width:none}
+
+/* faq */
+.faq{border-top:1px solid var(--line)}
+.faq details{border-bottom:1px solid var(--line)}
+.faq summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:20px;padding:24px 0;font-family:var(--display);font-size:1.3rem;color:var(--paper);transition:color .2s}
+.faq summary:hover{color:var(--beam)}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font-family:var(--sans);font-size:1.4rem;color:var(--beam);flex:none;transition:transform .3s}
+.faq details[open] summary::after{transform:rotate(45deg)}
+.faq .a{padding:0 0 24px;font-size:.95rem}
+.faq .a ul{margin:10px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+
+/* cta */
+.cta{position:relative;overflow:hidden;border-top:1px solid var(--line)}
+.cta::before{content:"";position:absolute;left:50%;top:-40%;width:1100px;height:900px;margin-left:-550px;background:radial-gradient(ellipse at center,color-mix(in srgb,var(--beam) 16%,transparent) 0%,transparent 60%);pointer-events:none}
+.cta .wrap{position:relative;display:grid;grid-template-columns:1.2fr 1fr;gap:clamp(32px,6vw,80px);padding-block:clamp(72px,11vw,128px);align-items:center}
+.cta .wrap > *{min-width:0}
+.cta p{margin-top:18px}
+.card{background:color-mix(in srgb,var(--wall) 85%,transparent);border:1px solid var(--line);border-radius:6px;padding:28px;display:flex;flex-direction:column;gap:16px;backdrop-filter:blur(8px)}
+.card .k{font-family:var(--mono);font-size:.64rem;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+.card .email{font-family:var(--display);font-size:clamp(1.15rem,2.6vw,1.6rem);color:var(--paper);overflow-wrap:anywhere;user-select:all}
+.card .row{display:flex;gap:10px;flex-wrap:wrap}
+.card hr{border:0;border-top:1px solid var(--line);margin:4px 0}
+.card pre{white-space:pre-wrap;margin:0;font-family:var(--sans);font-size:.88rem;color:var(--paper);line-height:1.55}
+
+footer{border-top:1px solid var(--line)}
+footer .wrap{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:32px;padding-block:52px 36px}
+footer .wrap > *{min-width:0}
+footer h4{font-family:var(--mono);font-weight:500;font-size:.64rem;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);margin:0 0 12px}
+footer ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;font-size:.9rem}
+footer a{text-decoration:none}
+footer a:hover{color:var(--beam)}
+.legal{border-top:1px solid var(--line)}
+.legal .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-block:20px;font-size:.8rem;color:var(--faint)}
+
+/* reveal (only for content below the fold; everything is visible without JS) */
+.pre{opacity:0;transform:translateY(18px)}
+.shown{opacity:1;transform:none;transition:opacity .9s ease,transform .9s cubic-bezier(.2,.7,.2,1)}
+.hair.pre{transform:scaleX(0);opacity:1}
+.hair.shown{transform:scaleX(1);transition:transform 1.4s cubic-bezier(.6,0,.2,1)}
+
+@media (max-width:980px){
+  .nav{display:none}
+  .lamp{aspect-ratio:4/5}
+  .lamp .copy{grid-template-columns:1fr}
+  .lamp .hint{display:none}
+  .sec-head,.viewer,.cta .wrap{grid-template-columns:1fr}
+  .info{position:static}
+  .stats{grid-template-columns:1fr 1fr;row-gap:20px}
+  .stats div:nth-child(3){padding-left:0;border-left:0}
+  .index{grid-template-columns:repeat(3,1fr)}
+  .plans{grid-template-columns:1fr;max-width:520px}
+  .steps{grid-template-columns:1fr 1fr;row-gap:28px}
+  .steps li:nth-child(3){padding-left:0;border-left:0}
+  footer .wrap{grid-template-columns:1fr 1fr}
+}
+@media (max-width:640px){
+  .lamp{aspect-ratio:3/4}
+  .lamp .copy .right p{display:none}
+  .std{grid-template-columns:1fr}
+  .index{grid-template-columns:repeat(2,1fr)}
+  .thumbs{grid-template-columns:repeat(2,1fr)}
+  .steps{grid-template-columns:1fr}
+  .steps li,.steps li + li{padding:22px 0 0;border-left:0}
+  footer .wrap{grid-template-columns:1fr}
+  .top .btn{display:none}
+  .below-hero{display:block;margin-top:18px}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  #halo{display:none}
+  .pre{opacity:1;transform:none}
+  .hair.pre{transform:none}
+}
+</style>
+</head>
+<body>
+
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-check" viewBox="0 0 16 16"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-x" viewBox="0 0 16 16"><path d="M4 4l8 8M12 4l-8 8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+  <symbol id="i-arrows" viewBox="0 0 24 24"><path d="M9 7l-5 5 5 5M15 7l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+</svg>
+
+<div id="halo" aria-hidden="true"></div>
+
+<header class="top">
+  <div class="wrap">
+    <a class="logo" href="#top" aria-label="Sorot Studio home"><b>Sorot</b><i></i><span>Studio</span></a>
+    <nav class="nav" aria-label="Sections">
+      <a href="#work">Work</a><a href="#process">Process</a><a href="#standards">Standards</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a>
+    </nav>
+    <a class="btn lit" href="#contact">Free sample</a>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap">
+      <div class="lamp" id="lamp" style="--x:62%;--y:46%">
+        <img class="dark" src="img/florida-0-b.jpg" alt="Beach house living room as photographed by the owner: dim, with toys and towels everywhere">
+        <img class="lit" src="img/florida-0-a.jpg" alt="The same living room after our edit, revealed under the light">
+        <div class="ring" aria-hidden="true"></div>
+        <div class="shade" aria-hidden="true"></div>
+        <span class="hint">Move your light across the room</span>
+        <div class="copy">
+          <div>
+            <span class="eyebrow">Listing photo editing · Villas, apartments &amp; boutique hotels</span>
+            <h1>Same room.<br><em>Better light.</em></h1>
+          </div>
+          <div class="right">
+            <p>We turn the phone photos on your listing into clean, bright, true-to-life images in 24 hours. Clutter goes. The room stays exactly as it is.</p>
+            <div class="row">
+              <a class="btn lit" href="#contact">Get 3 photos edited free <svg><use href="#i-arrow"/></svg></a>
+              <a class="btn" href="#work">View work</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="below-hero">We turn the phone photos on your listing into clean, bright, true-to-life images in 24 hours. Clutter goes. The room stays exactly as it is.</p>
+      <div class="stats">
+        <div><b>24h</b><span>Turnaround, full listing</span></div>
+        <div><b>$149</b><span>Per property, 15–20 photos</span></div>
+        <div><b>3</b><span>Free sample photos</span></div>
+        <div><b>0</b><span>Furniture changed</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="film" hidden>
+    <div class="wrap">
+      <div class="sec-head">
+        <div><span class="eyebrow">The edit, in six seconds</span><h2>Lights on. <em>Clutter gone.</em></h2><div class="hair"></div></div>
+        <p>The same room, the same furniture, the same view. Only what the guest left behind disappears.</p>
+      </div>
+      <figure class="film" style="margin:0">
+        <video id="filmVideo" muted loop playsinline preload="metadata" poster="img/film-poster.jpg" aria-label="Video: the beach house living room changes from cluttered to clean while the room stays the same"></video>
+        <figcaption>Destin Beach House · Concept project</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="block" id="work">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><span class="eyebrow">Selected work</span><h2>Six properties, <em>twenty-four rooms.</em></h2><div class="hair"></div></div>
+        <p>Choose a property, then a room, and drag across the photo. The left side is the owner's phone shot. The right side is our edit, delivered as one consistent set.</p>
+      </div>
+      <div class="tabs" role="tablist" aria-label="Property" id="tabs"></div>
+      <div class="viewer">
+        <div>
+          <div class="ba" id="ba" style="--pos:50%">
+            <img id="baB" src="img/lisbon-0-b.jpg" alt="">
+            <img id="baA" class="after" src="img/lisbon-0-a.jpg" alt="">
+            <div class="line"></div>
+            <input type="range" min="0" max="100" value="50" id="baRange" aria-label="Compare before and after">
+            <div class="knob"><svg><use href="#i-arrows"/></svg></div>
+            <span class="tag b">Before</span><span class="tag a">After</span>
+          </div>
+          <div class="thumbs" role="group" aria-label="Room" id="thumbs"></div>
+        </div>
+        <aside class="info" aria-live="polite">
+          <span class="loc" id="pLoc"></span>
+          <h3 id="pName"></h3>
+          <p id="pBlurb"></p>
+          <dl class="spec">
+            <div><dt>Type</dt><dd id="pType"></dd></div>
+            <div><dt>Room</dt><dd id="rName"></dd></div>
+            <div><dt>Removed</dt><dd id="rRem"></dd></div>
+            <div><dt>Note</dt><dd id="rNote"></dd></div>
+          </dl>
+        </aside>
+      </div>
+      <p class="disclaimer"><b>About this portfolio.</b> These properties are concept projects: simulated rooms built to demonstrate our editing. They will be replaced with client work as owners approve it for publication. Any change to the sky or time of day is labeled.</p>
+    </div>
+  </section>
+
+  <section class="block" id="index" style="background:var(--dusk)">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><span class="eyebrow">Full index</span><h2>Point at a room. <em>Lights on.</em></h2><div class="hair"></div></div>
+        <p>Each photo starts as the owner shot it. Hover or focus to see our edit, then select it to open the comparison viewer.</p>
+      </div>
+      <div class="index" id="indexGrid"></div>
+    </div>
+  </section>
+
+  <section class="block" id="process">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><span class="eyebrow">Process</span><h2>From phone photos to <em>listing-ready</em> in a day.</h2><div class="hair"></div></div>
+        <p>No photographer visit, no scheduling. You approve every image before it goes live.</p>
+      </div>
+      <ol class="steps">
+        <li><h3>Send</h3><p>Share your listing link or 15–20 phone photos, one per room.</p></li>
+        <li><h3>Edit</h3><p>We clean up, correct the light and color-match every room as one set.</p></li>
+        <li><h3>Review</h3><p>You see each photo beside the original and request any changes.</p></li>
+        <li><h3>Publish</h3><p>Full-resolution files, sized for listing platforms and your own site.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="block" id="standards" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><span class="eyebrow">Editing standards</span><h2>Guests should find the room <em>they booked.</em></h2><div class="hair"></div></div>
+        <p>Misleading photos come back as bad reviews. Every edit is checked side by side against the original before it leaves the studio.</p>
+      </div>
+      <div class="std">
+        <div class="yes">
+          <span class="eyebrow">What we improve</span>
+          <ul>
+            <li><svg><use href="#i-check"/></svg>Exposure and white balance, so dark rooms look bright and natural</li>
+            <li><svg><use href="#i-check"/></svg>Vertical lines and horizons, straightened</li>
+            <li><svg><use href="#i-check"/></svg>Temporary clutter: bags, towels, dishes, cables, toys, hoses, cars</li>
+            <li><svg><use href="#i-check"/></svg>Window views recovered instead of blown-out white</li>
+            <li><svg><use href="#i-check"/></svg>Overcast skies, replaced on request and always labeled</li>
+          </ul>
+        </div>
+        <div class="no">
+          <span class="eyebrow">What we never touch</span>
+          <ul>
+            <li><svg><use href="#i-x"/></svg>Furniture, fixtures, sinks, taps, tiles or lighting</li>
+            <li><svg><use href="#i-x"/></svg>Room size, layout or camera angle</li>
+            <li><svg><use href="#i-x"/></svg>The view itself: no added sea, pool or garden</li>
+            <li><svg><use href="#i-x"/></svg>Wall and material colors beyond correcting the light</li>
+            <li><svg><use href="#i-x"/></svg>Added objects: no plants, rugs or decor that isn't there</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="pricing" style="background:var(--dusk)">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><span class="eyebrow">Pricing · Introductory rates</span><h2>About half the cost of <em>a photo shoot.</em></h2><div class="hair"></div></div>
+        <p>Start with a free sample from your own listing. Pay only when you like what you see.</p>
+      </div>
+      <div class="plans">
+        <div class="plan">
+          <h3>Free sample</h3>
+          <div class="amt"><b>$0</b></div>
+          <ul>
+            <li><svg><use href="#i-check"/></svg>3 photos from your current listing</li>
+            <li><svg><use href="#i-check"/></svg>Delivered within 24 hours</li>
+            <li><svg><use href="#i-check"/></svg>No commitment</li>
+          </ul>
+          <a class="btn" href="#contact">Request sample</a>
+        </div>
+        <div class="plan feat">
+          <h3>Listing Refresh</h3>
+          <div class="amt"><b>$149</b><span>per property</span></div>
+          <p class="was">Regular price <s>$249</s></p>
+          <ul>
+            <li><svg><use href="#i-check"/></svg>15–20 photos edited as one set</li>
+            <li><svg><use href="#i-check"/></svg>Short video tour included</li>
+            <li><svg><use href="#i-check"/></svg>24-hour turnaround</li>
+            <li><svg><use href="#i-check"/></svg>One round of revisions</li>
+          </ul>
+          <a class="btn lit" href="#contact">Start with a free sample</a>
+        </div>
+        <div class="plan">
+          <h3>Booking Website</h3>
+          <div class="amt"><b>$490</b><span>one-time</span></div>
+          <p class="was">Regular price <s>$990</s></p>
+          <ul>
+            <li><svg><use href="#i-check"/></svg>One-page direct-booking site</li>
+            <li><svg><use href="#i-check"/></svg>Listing Refresh included</li>
+            <li><svg><use href="#i-check"/></svg>Take direct bookings without platform fees</li>
+          </ul>
+          <a class="btn" href="#contact">Ask about websites</a>
+        </div>
+      </div>
+      <p class="addons">Monthly options: website hosting and updates from $25 · seasonal promotional videos from $150.</p>
+    </div>
+  </section>
+
+  <section class="block" id="faq">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><span class="eyebrow">FAQ</span><h2>Questions owners ask.</h2><div class="hair"></div></div>
+        <p>Anything else, email us and we'll reply within a day.</p>
+      </div>
+      <div class="faq">
+        <details><summary>Will edited photos get me in trouble with the platform?</summary><div class="a"><p>Listing platforms expect photos to show the space accurately. That is exactly why we never change furniture, room size or views. We only improve light, straighten lines and remove temporary clutter. Sky replacements are optional and labeled.</p></div></details>
+        <details><summary>What do I need to send?</summary><div class="a"><p>Your listing link is enough for the free sample. For a full refresh, send 15–20 phone photos, one per room plus the view, pool and entrance.</p></div></details>
+        <details><summary>How should I take the photos?</summary><div class="a"><p>A few minutes of preparation makes a big difference:</p><ul><li>Shoot in daylight with lamps on and curtains open</li><li>Stand in a corner of the room, not in the doorway</li><li>Hold the phone horizontally at chest height and keep it level</li><li>Use the 0.5× wide lens if your phone has one</li><li>Make the bed and put personal items out of sight</li></ul></div></details>
+        <details><summary>What if I don't like an edit?</summary><div class="a"><p>Every Listing Refresh includes one round of revisions. Tell us which photos to adjust and we'll send new versions.</p></div></details>
+        <details><summary>How do I pay?</summary><div class="a"><p>After you approve your free sample, we send an invoice. You pay only for the package you choose.</p></div></details>
+        <details><summary>Are the properties on this page real?</summary><div class="a"><p>No. They are concept projects built to show our process. We will replace them with real client work, shown only with each owner's permission.</p></div></details>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta" id="contact">
+    <div class="wrap">
+      <div>
+        <span class="eyebrow">Free sample</span>
+        <h2 style="margin-top:18px">Send your listing. We'll light up <em>three photos</em> free.</h2>
+        <p>Email us your listing link. You'll receive three edited photos within 24 hours, with no obligation to continue.</p>
+      </div>
+      <div class="card">
+        <span class="k">Email</span>
+        <span class="email" id="email">sorotindonesia.id@gmail.com</span>
+        <div class="row">
+          <button class="btn lit" type="button" id="copyEmail">Copy email</button>
+          <a class="btn" href="mailto:sorotindonesia.id@gmail.com?subject=Free%20sample%20request">Open email app</a>
+        </div>
+        <hr>
+        <span class="k">Message you can paste</span>
+        <pre id="tpl">Hi Sorot Studio,
+
+I'd like 3 free photo edits for my listing:
+[listing link]
+
+Property type: villa / apartment / hotel</pre>
+        <div class="row"><button class="btn" type="button" id="copyTpl">Copy message</button></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div>
+      <a class="logo" href="#top"><b>Sorot</b><i></i><span>Studio</span></a>
+      <p style="margin-top:14px;font-size:.9rem">Listing photo editing for short-term rentals and boutique hotels. Remote studio, working worldwide.</p>
+    </div>
+    <div><h4>Studio</h4><ul><li><a href="#work">Work</a></li><li><a href="#process">Process</a></li><li><a href="#standards">Standards</a></li><li><a href="#pricing">Pricing</a></li></ul></div>
+    <div><h4>Contact</h4><ul><li style="overflow-wrap:anywhere">sorotindonesia.id@gmail.com</li><li><a href="#contact">Request a free sample</a></li><li><a href="#faq">FAQ</a></li></ul></div>
+  </div>
+  <div class="legal"><div class="wrap"><span>© 2026 Sorot Studio</span><span>Portfolio images are concept projects.</span></div></div>
+</footer>
+
+<script>
+const FILM_SRC = "film.mp4";
+const DATA = [
+ {id:"lisbon", tab:"Lisbon", name:"Alfama Apartment", loc:"Lisbon, Portugal", type:"1-bedroom city apartment",
+  blurb:"A tiled 19th-century flat with river views, photographed by the owner on a grey afternoon.",
+  rooms:[["Living room","Jacket, coat, laptop, cables, mugs, papers, shoes","Sky replaced"],["Bedroom","Backpack, clothes, phone, glass, shoes","Light corrected"],["Kitchen","Dishes, bottles, mugs, tea towels, bread bag","Original sink and tiles kept"],["Balcony","Drying rack, laundry, plastic bag, bottle","Sky replaced"]]},
+ {id:"goldcoast", tab:"Gold Coast", name:"Surfers Paradise Apartment", loc:"Gold Coast, Australia", type:"2-bedroom beachfront apartment",
+  blurb:"A high-floor apartment where midday glare hid the ocean view.",
+  rooms:[["Living room","Beach towel, sunscreen, sunglasses, bodyboard, sandals","Glare balanced, sky replaced"],["Bedroom","Suitcase, hat, clothes, phone","Light corrected"],["Bathroom","Wet towels, swimsuit, toiletries, razor","True white walls kept"],["Balcony","Swimsuits, towels, bottles, plastic bag, flip-flops","Sky replaced"]]},
+ {id:"london", tab:"London", name:"Notting Hill Studio", loc:"London, United Kingdom", type:"Studio flat in a Victorian house",
+  blurb:"A compact studio photographed on a rainy day, mid-stay.",
+  rooms:[["Studio","Coat, umbrella, shoes, keys","Sky replaced, raindrops removed"],["Kitchen","Bottles, takeaway boxes, dishes, tea towels, coat","Light corrected"],["Bathroom","Towels, bottles, toothbrush mug","Frosted glass kept"],["Window seat","Laptop, mug, papers, cable","Sky replaced"]]},
+ {id:"kabin", tab:"Smoky Mountains", name:"Smoky Mountain Cabin", loc:"Gatlinburg, Tennessee", type:"2-bedroom log cabin",
+  blurb:"A log cabin after a weekend stay, shot in rain and dim lamplight.",
+  rooms:[["Living room","Blankets, board games, snacks, can, ash","Fire and lamps kept on"],["Deck & hot tub","Towels, cans, cooler, puddles","Golden hour edit"],["Exterior","Parked SUV, trash bins, hose","Golden hour edit"],["Bedroom","Jacket, hiking boots, backpack, bottle","Wood tone corrected"]]},
+ {id:"barcelona", tab:"Barcelona", name:"Eixample Boutique Hotel", loc:"Barcelona, Spain", type:"Boutique hotel",
+  blurb:"A modernist hotel with original hydraulic floor tiles, photographed mid-turnover.",
+  rooms:[["Guest room","Room-service tray, suitcase, robe, water bottle","Floor tile pattern kept"],["Bathroom","Towel on floor, toiletry bag, hairdryer","Light corrected"],["Lobby","Backpack, boxes, laptop, papers","Light corrected"],["Rooftop","Stacked chairs, umbrella, hose, mop bucket","Sky replaced, skyline unchanged"]]},
+ {id:"florida", tab:"Florida", name:"Destin Beach House", loc:"Destin, Florida", type:"3-bedroom family beach house",
+  blurb:"A family rental photographed the morning after a full house checked out.",
+  rooms:[["Living room","Toys, beach bag, towels, snacks, sandals","TV screen switched off"],["Kitchen","Grocery bags, cereal, dishes, tea towels","Fruit bowl kept"],["Bedroom","Suitcase, hat, beach towel, clothes","Light corrected"],["Pool & backyard","Pool floats, cooler, hoses, towels","Sky replaced"]]}
+];
+const $ = id => document.getElementById(id);
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const finePointer = matchMedia('(pointer: fine)').matches;
+
+/* ---- the lamp (hero) ---- */
+(function(){
+  const lamp = $('lamp');
+  let tx=62, ty=46, x=62, y=46, user=false, t0=performance.now();
+  function frame(now){
+    if(!user && !reduce){ // slow idle drift so the effect reads even before anyone moves
+      const t=(now-t0)/1000; tx=55+22*Math.sin(t*0.35); ty=48+14*Math.sin(t*0.53+1);
+    }
+    x+=(tx-x)*0.12; y+=(ty-y)*0.12;
+    lamp.style.setProperty('--x',x+'%'); lamp.style.setProperty('--y',y+'%');
+    requestAnimationFrame(frame);
+  }
+  function point(cx,cy){
+    const r=lamp.getBoundingClientRect();
+    tx=Math.max(0,Math.min(100,(cx-r.left)/r.width*100)); ty=Math.max(0,Math.min(100,(cy-r.top)/r.height*100)); user=true;
+  }
+  lamp.addEventListener('pointermove',e=>point(e.clientX,e.clientY));
+  lamp.addEventListener('pointerdown',e=>point(e.clientX,e.clientY));
+  lamp.addEventListener('pointerleave',()=>{user=false; t0=performance.now();});
+  requestAnimationFrame(frame);
+})();
+
+/* ---- ambient halo following the cursor, with a slight lag ---- */
+(function(){
+  if(reduce || !finePointer) return;
+  const h=$('halo'); let mx=innerWidth/2,my=innerHeight/2,hx=mx,hy=my;
+  addEventListener('pointermove',e=>{mx=e.clientX;my=e.clientY;document.body.classList.add('has-pointer');},{passive:true});
+  (function loop(){hx+=(mx-hx)*0.08;hy+=(my-hy)*0.08;h.style.transform=`translate(${hx}px,${hy}px)`;requestAnimationFrame(loop);})();
+})();
+
+/* ---- film section, shown once a video file is set ---- */
+if(FILM_SRC){
+  const v=$('filmVideo'); v.src=FILM_SRC; $('film').hidden=false;
+  if(!reduce){ v.autoplay=true; v.play().catch(()=>{}); } else { v.controls=true; }
+}
+
+/* ---- portfolio viewer ---- */
+let cur={p:0,r:0};
+function bindBA(box,range){const set=v=>box.style.setProperty('--pos',v+'%');range.addEventListener('input',()=>set(range.value));set(range.value);}
+function render(){
+  const p=DATA[cur.p], r=p.rooms[cur.r];
+  $('tabs').innerHTML=DATA.map((d,i)=>`<button role="tab" aria-selected="${i===cur.p}" data-i="${i}">${d.tab}</button>`).join('');
+  $('tabs').querySelectorAll('button').forEach(b=>b.onclick=()=>{cur={p:+b.dataset.i,r:0};render();});
+  $('thumbs').innerHTML=p.rooms.map((x,i)=>`<button type="button" aria-pressed="${i===cur.r}" data-i="${i}"><img src="img/${p.id}-${i}-t.jpg" alt="" loading="lazy"><span>${x[0]}</span></button>`).join('');
+  $('thumbs').querySelectorAll('button').forEach(b=>b.onclick=()=>{cur.r=+b.dataset.i;render();});
+  $('baB').src=`img/${p.id}-${cur.r}-b.jpg`; $('baB').alt=`${p.name}, ${r[0].toLowerCase()}, before editing`;
+  $('baA').src=`img/${p.id}-${cur.r}-a.jpg`; $('baA').alt=`${p.name}, ${r[0].toLowerCase()}, after editing`;
+  $('pLoc').textContent=p.loc; $('pName').textContent=p.name; $('pBlurb').textContent=p.blurb;
+  $('pType').textContent=p.type; $('rName').textContent=r[0]; $('rRem').textContent=r[1]; $('rNote').textContent=r[2];
+  p.rooms.forEach((_,i)=>['b','a'].forEach(t=>{const im=new Image();im.src=`img/${p.id}-${i}-${t}.jpg`;}));
+}
+$('indexGrid').innerHTML=DATA.flatMap((p,pi)=>p.rooms.map((r,ri)=>
+  `<button type="button" data-p="${pi}" data-r="${ri}" aria-label="Open ${p.name}, ${r[0]}">
+     <div class="pic"><img class="b" src="img/${p.id}-${ri}-b.jpg" alt="" loading="lazy"><img class="a" src="img/${p.id}-${ri}-t.jpg" alt="" loading="lazy"></div>
+     <span class="t">${r[0]}</span><span class="s">${p.name}</span>
+   </button>`)).join('');
+$('indexGrid').querySelectorAll('button').forEach(b=>b.onclick=()=>{cur={p:+b.dataset.p,r:+b.dataset.r};render();$('work').scrollIntoView({behavior:reduce?'auto':'smooth'});});
+bindBA($('ba'),$('baRange'));
+render();
+
+/* ---- reveal on scroll (only elements that start below the fold) ---- */
+if(!reduce && 'IntersectionObserver' in window){
+  const els=[...document.querySelectorAll('.sec-head, .hair, .steps li, .plan, .std > div, .index button')];
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('shown');io.unobserve(e.target);}}),{rootMargin:'0px 0px -8% 0px'});
+  els.forEach((el,i)=>{ if(el.getBoundingClientRect().top>innerHeight){ el.classList.add('pre'); el.style.transitionDelay=(el.matches('.index button,.steps li,.plan')?(i%4)*70:0)+'ms'; io.observe(el);} });
+}
+
+/* ---- copy buttons ---- */
+function copy(btnId,srcId,label){
+  $(btnId).addEventListener('click',async()=>{
+    const btn=$(btnId),t=$(srcId).textContent;
+    try{await navigator.clipboard.writeText(t);btn.textContent='Copied';}
+    catch(e){const s=getSelection(),rg=document.createRange();rg.selectNodeContents($(srcId));s.removeAllRanges();s.addRange(rg);btn.textContent='Selected, press Ctrl+C';}
+    setTimeout(()=>btn.textContent=label,2000);
+  });
+}
+copy('copyEmail','email','Copy email');
+copy('copyTpl','tpl','Copy message');
+</script>
+
+</body>
+</html>
